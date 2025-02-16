@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect } from "react";
-import { MapPin, Phone, Mail, Calendar, Award } from "lucide-react";
+import { useEffect, useState } from "react";
+import { MapPin, Phone, Mail, Calendar, Award, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -12,8 +13,17 @@ import {
 import useEmblaCarousel from "embla-carousel-react";
 
 export default function Home() {
-  const [achievementsRef, achievementsApi] = useEmblaCarousel({ loop: true, align: "start" });
-  const [clinicRef, clinicApi] = useEmblaCarousel({ loop: true, align: "start" });
+  const [emphasizeButton, setEmphasizeButton] = useState(false);
+  const [achievementsRef, achievementsApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: "start",
+    dragFree: true 
+  });
+  const [clinicRef, clinicApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: "start",
+    dragFree: true 
+  });
 
   useEffect(() => {
     if (achievementsApi && clinicApi) {
@@ -33,25 +43,46 @@ export default function Home() {
   }, [achievementsApi, clinicApi]);
 
   const treatments = [
-    { name: "General Dentistry", description: "Comprehensive dental care including cleanings, fillings, and preventive treatments" },
-    { name: "Cosmetic Dentistry", description: "Transform your smile with veneers, whitening, and cosmetic procedures" },
-    { name: "Orthodontics", description: "Straighten your teeth with modern braces and clear aligners" },
-    { name: "Oral Surgery", description: "Expert surgical procedures including wisdom teeth removal and dental implants" },
+    { 
+      name: "General Dentistry", 
+      description: "Comprehensive dental care including cleanings, fillings, and preventive treatments",
+      image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&auto=format&fit=crop&q=80"
+    },
+    { 
+      name: "Cosmetic Dentistry", 
+      description: "Transform your smile with veneers, whitening, and cosmetic procedures",
+      image: "https://images.unsplash.com/photo-1445527815219-ecbfec67492e?w=800&auto=format&fit=crop&q=80"
+    },
+    { 
+      name: "Orthodontics", 
+      description: "Straighten your teeth with modern braces and clear aligners",
+      image: "https://images.unsplash.com/photo-1601009171743-6dd4d0ce6ce7?w=800&auto=format&fit=crop&q=80"
+    },
+    { 
+      name: "Oral Surgery", 
+      description: "Expert surgical procedures including wisdom teeth removal and dental implants",
+      image: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=800&auto=format&fit=crop&q=80"
+    },
+    { 
+      name: "Pediatric Dentistry", 
+      description: "Specialized dental care for children in a comfortable, friendly environment",
+      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&auto=format&fit=crop&q=80"
+    }
   ];
 
   const locations = [
     {
-      name: "32 Pearls",
-      address: "C-53 Kendriya Vihar Sector 56 Gurgaon",
+      name: "32 Pearls Dental Clinic",
+      address: "C-53 Kendriya Vihar Sector 56",
       phone: "9811107668",
       hours: "Mon-Sun: 6PM-8:30PM",
       mapsUrl: "https://www.google.com/maps/search/?api=1&query=123+Main+Street+Downtown",
     },
     {
       name: "Agrim Dental Clinic",
-      address: "Sushant Tower Sector 56 Gurgaon",
+      address: "Shop No. 18 Sushant Tower Sector 56",
       phone: "9811107668",
-      hours: "Mon-Sat: 11AM-2PM",
+      hours: "Mon-Sat: 11PM-1:30PM",
       mapsUrl: "https://www.google.com/maps/search/?api=1&query=456+West+Avenue+Westside",
     },
   ];
@@ -83,7 +114,15 @@ export default function Home() {
   };
 
   const handleBookAppointment = () => {
-    window.location.href = 'tel:9811107668';
+    window.location.href = 'tel:+15551234567';
+  };
+
+  const scrollToBooking = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setEmphasizeButton(true);
+    setTimeout(() => {
+      setEmphasizeButton(false);
+    }, 4500); // Duration matches the 3 pulses (1.5s * 3)
   };
 
   return (
@@ -100,9 +139,14 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="relative z-10 text-center text-white px-4">
-          <h1 className="text-5xl font-bold mb-6">Smile Bright Dental Clinic</h1>
+          <h1 className="text-5xl font-bold mb-6">32 Pearls Dental Clinic</h1>
           <p className="text-xl mb-8">Advanced Care for Your Perfect Smile</p>
-          <Button size="lg" className="bg-primary hover:bg-primary/90" onClick={handleBookAppointment}>
+          <Button 
+            id="booking-button"
+            size="lg" 
+            className={`bg-primary hover:bg-primary/90 ${emphasizeButton ? 'emphasis' : ''}`}
+            onClick={handleBookAppointment}
+          >
             <Calendar className="mr-2 h-5 w-5" /> Book Appointment
           </Button>
         </div>
@@ -145,13 +189,34 @@ export default function Home() {
       <section className="py-20 bg-white px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Our Treatments</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {treatments.map((treatment, index) => (
-              <Card key={index} className="p-6">
-                <h3 className="text-xl font-semibold mb-3">{treatment.name}</h3>
-                <p className="text-muted-foreground">{treatment.description}</p>
+              <Card key={index} className="overflow-hidden">
+                <div className="h-48 relative">
+                  <img 
+                    src={treatment.image} 
+                    alt={treatment.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-3">{treatment.name}</h3>
+                  <p className="text-muted-foreground">{treatment.description}</p>
+                </div>
               </Card>
             ))}
+            <Card 
+              className="overflow-hidden cursor-pointer hover:bg-secondary transition-colors"
+              onClick={scrollToBooking}
+            >
+              <div className="h-full flex flex-col items-center justify-center p-6">
+                <h3 className="text-xl font-semibold mb-3">More Treatments</h3>
+                <ArrowRight className="h-8 w-8 text-primary" />
+                <p className="text-muted-foreground text-center mt-3">
+                  Click to schedule a consultation
+                </p>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -166,6 +231,7 @@ export default function Home() {
             opts={{
               align: "start",
               loop: true,
+              dragFree: true
             }}
           >
             <CarouselContent>
@@ -192,6 +258,7 @@ export default function Home() {
             opts={{
               align: "start",
               loop: true,
+              dragFree: true
             }}
           >
             <CarouselContent>
@@ -218,11 +285,11 @@ export default function Home() {
           <div className="flex flex-col items-center space-y-6">
             <div className="flex items-center">
               <Phone className="mr-2" />
-              <span>Emergency: (555) 999-9999</span>
+              <span>9811107668</span>
             </div>
             <div className="flex items-center">
               <Mail className="mr-2" />
-              <span>info@smilebrightdental.com</span>
+              <span>drsandhyakakkar@yahoo.co.in</span>
             </div>
             <Button size="lg" className="mt-6" onClick={handleBookAppointment}>
               <Calendar className="mr-2 h-5 w-5" /> Schedule Your Visit

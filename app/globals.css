@@ -80,3 +80,22 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes emphasis-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.emphasis {
+  animation: emphasis-pulse 1.5s ease-in-out 3;
+}
